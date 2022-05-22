@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.98.0">
-  <title>Signup Page</title>
+  <title>Main Page</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
@@ -15,64 +15,60 @@
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
 
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker.min.css'>
-  <script src='https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js'></script>
-
+  <link rel="stylesheet" href="stylesheets/mainLayout.css">
   <link href="stylesheets/signUp.css" rel="stylesheet">
 </head>
 
-<body class="text-center">
+<body>
+  <header class="p-3 border-bottom position-fixed top-0 w-100" style="background-color: white;">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <img src="https://www.tdtu.edu.vn/sites/www/files/Brand-left-vi-1_0_0.png" height="40">
+      </ul>
 
-  <main class="form-signin w-100 m-auto">
-    <form>
-      <img class="mb-4" src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72"
-        height="57">
-      <h1 class="h3 mb-3 fw-normal">Please Sign up</h1>
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+      </form>
 
-      <div class="form-floating mb-3">
-        <input type="number" class="form-control" id="phone" placeholder="+(84) 333 555 777">
-        <label for="phone">Phone</label>
+      <div class="dropdown text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" href="#">New project...</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="#">Sign out</a></li>
+        </ul>
       </div>
+    </div>
+  </header>
 
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="email" placeholder="email@gmail.com">
-        <label for="email">Email</label>
-      </div>
+  <section class="sidebar flex-column flex-shrink-0 bg-light h-100 p-2" style="width: 280px;">
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="#" class="nav-link active ps-3 py-3" aria-current="page">
+          Home
+        </a>
+      </li>
+      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
+      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
+      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
+      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
+    </ul>
+  </section>
 
-
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="name" placeholder="John Doe">
-        <label for="email">Name</label>
-      </div>
-
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="address" placeholder="19 Nguyen Huu Tho">
-        <label for="address">Address</label>
-      </div>
-
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="birthday" placeholder="John Doe">
-        <label for="birthday">Birthday</label>
-      </div>
-
-
-      <div class="mb-3">
-        <label for="before-identification" class="form-label w-100 text-start">Before of Identification Card</label>
-        <input class="form-control" type="file" id="before-identification">
-      </div>
-
-      <div class="mb-3">
-        <label for="after-identification" class="form-label w-100 text-start">After of Identification Card</label>
-        <input class="form-control" type="file" id="after-identification">
-      </div>
+  <div class="main-content p-5 ">
+    <!-- Pass your content here -->
+    <%- include('partials/signUpPartial') %> 
+  </div>
 
 
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
-    </form>
-  </main>
-
-  <script src="signUp.js"></script>
+  <script src="/javascripts/signUp.js"></script>
 </body>
 
 </html>
