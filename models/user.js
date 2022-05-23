@@ -4,7 +4,10 @@ const Account = require('../models/account')
 
 const userSchema = new Schema({
     name: String,
-    email: String,
+    email: {
+        type: String,
+        required: [true, 'Email is requried']
+    },
     balance: {
         type: Number,
         min: [0, 'Money must greater than 0']
