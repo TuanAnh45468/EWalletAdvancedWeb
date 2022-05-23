@@ -27,6 +27,7 @@ main().catch(err => console.log(err));
 
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/Ewallet');
+  console.log("Connected to MongoDB");
 }
 
 // catch 404 and forward to error handler
