@@ -15,6 +15,8 @@ const userSchema = new Schema({
     phoneNumber: String,
     birthday: Date,
     address: String,
+    frontImage: String,
+    backImage: String,
     accounts: [{type: Schema.Types.ObjectId, ref: 'Account'}]
 });
 
