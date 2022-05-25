@@ -18,54 +18,24 @@
   <link rel="stylesheet" href="stylesheets/mainLayout.css">
 </head>
 
-<body>
-  <header class="p-3 border-bottom position-fixed top-0 w-100" style="background-color: white;">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <img src="https://www.tdtu.edu.vn/sites/www/files/Brand-left-vi-1_0_0.png" height="40">
-      </ul>
+<body class="text-center">
+  <main class="form-signin w-100 m-auto" style=" max-width: 400px;padding: 15px;">
+    <form>
+      <h1 class="h3 mb-3 fw-normal">Change Password</h1>
+      <p class="  ">Please change your password to continuate</p>
 
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-      </form>
-
-      <div class="dropdown text-end">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-        </a>
-        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#">New project...</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li><a class="dropdown-item" href="#">Sign out</a></li>
-        </ul>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="password" placeholder="***">
+        <label for="password">Password</label>
       </div>
-    </div>
-  </header>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="confirm-password" placeholder="***">
+        <label for="confirm-password">Confirm Password</label>
+      </div>
 
-  <section class="sidebar flex-column flex-shrink-0 bg-light h-100 p-2" style="width: 280px;">
-    <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a href="#" class="nav-link active ps-3 py-3" aria-current="page">
-          Home
-        </a>
-      </li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
-    </ul>
-  </section>
-
-  <div class="main-content p-5 ">
-    <!-- Pass your content here -->
-    <%- include('partials/firstTimePartial') %> 
-  </div>
-
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+    </form>
+  </main>
 
 </body>
 

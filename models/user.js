@@ -13,10 +13,22 @@ const userSchema = new Schema({
         min: [0, 'Money must greater than 0']
     },
     phoneNumber: String,
-    birthday: Date,
+    birthday: String,
     address: String,
-    frontImage: String,
-    backImage: String,
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
+
+/*     backImages: [
+        {
+            url: String,
+            fileName: String
+        }
+    ], */
+
     accounts: [{type: Schema.Types.ObjectId, ref: 'Account'}]
 });
 

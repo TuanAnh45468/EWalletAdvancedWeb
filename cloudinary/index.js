@@ -9,8 +9,10 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    folder: 'EWallet',
-    allowedFormats: ['jpeg', 'png', 'jpg']
+    params: {
+        folder: 'EWallet',
+        allowedFormats: ['jpeg', 'png', 'jpg']
+    }
 })
 
 module.exports = {
