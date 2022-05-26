@@ -11,19 +11,24 @@ const catchAsync = require('../utils/catchAsync');
 
 
 module.exports.createUser =  async (req, res, next) =>{
-    const userAccount = generateUser(10);
-    const user = new User(req.body);
     const email = req.body.email;
+    const existUser = User.findOne({email: email});
 
-    req.session.email = email;
-    req.session.userAccount = userAccount;
-    
-    createAccount(email, userAccount);
-    user.images = req.files.map(f => ({url: f.path, filename: f.filename}));
-    //user.backImages = req.files.map(f => ({url: f.path, filename: f.filename}));
-    await user.save();
-    //console.log(user);
-    res.redirect('/users/firstTime')
+    if(existUser){
+        res.redirect('/users/register')
+    } else {
+        const userAccount = generateUser(10);
+        const user = new User(req.body);
+        
+        req.session.email = email;
+        req.session.userAccount = userAccount;
+        
+        createAccount(email, userAccount);
+        user.images = req.files.map(f => ({url: f.path, filename: f.filename}));
+        await user.save();
+        //console.log(user);
+        res.redirect('/users/firstTime')
+    }
 }
 
 const validateEmail = (req, res, next) =>{

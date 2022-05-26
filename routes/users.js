@@ -17,6 +17,13 @@ const saltRounds = 10;
 const ExpressError= require('../utils/ExpressError')
 const {changePassFirstSchemas} = require('../schemas.js')
 
+const isLoggin = (req, res, next) =>{
+  if(!req.session._id){
+    return res.redirect('/users/login')
+  }
+  next();
+}
+
 const validateChangePassFirst = (req, res, next) =>{
   const {error} = changePassFirstSchemas.validate(req.body);
 
@@ -27,6 +34,10 @@ const validateChangePassFirst = (req, res, next) =>{
     next();
   }
 } 
+
+router.get('/', function(req, res, next) {
+  res.render('mainLayoutUser')
+})
 
 router.get('/register', function(req, res, next){
   res.render('signUp');
@@ -67,10 +78,8 @@ router.get('/logout', function(req, res, next) {
 
 router.get('/firstTime',catchAsync(async (req, res, next) => {
   const userAccount = await  Account.findOne({username: req.session.userAccount})
-  //console.log("UserAccount ID", userAccount._id);
   const user = await User.findOneAndUpdate({email: req.session.email}, {accounts: userAccount._id})
   const email = req.session.email;
-  
   res.render('changePassFirstTime');
 }))
 
@@ -78,14 +87,27 @@ router.post('/firstTime', validateChangePassFirst, catchAsync(async (req, res, n
   const firstPassword = req.body.firstPassword;
   const secondPassword = req.body.secondPassword;
   if(firstPassword !== secondPassword) throw new ExpressError('Password does not match', 400)
+
   const userAccount = await  Account.findOne({username: req.session.userAccount})
 
   bcrypt.hash(firstPassword, saltRounds, function(err, hash) {
     userAccount.password = hash;
     userAccount.save();
   })
-  res.redirect('/')
+  res.redirect('/');
 }))
+
+router.get('/transferMoney', (req, res, next) =>{
+  res.render('transferMoney');
+})
+
+router.get('/updateProfile', (req, res, next) =>{
+  res.render('updateProfile');
+})
+
+router.get('/changePass', (req, res, next) => {
+  res.render('changePass');
+})
 
 router.use((err, req, res, next) =>{
   const {statusCode = 500} = err;

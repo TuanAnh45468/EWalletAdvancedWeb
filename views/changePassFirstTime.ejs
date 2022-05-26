@@ -20,23 +20,23 @@
 
 <body class="text-center">
   <main class="form-signin w-100 m-auto" style=" max-width: 400px;padding: 15px;">
-    <form action="/users/firstTime" method="post">
+    <form action="/users/firstTime" method="post" novalidate class="validated-form">
       <h1 class="h3 mb-3 fw-normal">Change Password</h1>
       <p class="  ">Please change your password to continuate</p>
 
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="password" placeholder="***" name="firstPassword">
+        <input type="password" class="form-control" id="password" placeholder="***" name="firstPassword" required>
         <label for="password">Password</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="confirm-password" placeholder="***" name="secondPassword">
+        <input type="password" class="form-control" id="confirm-password" placeholder="***" name="secondPassword" required>
         <label for="confirm-password">Confirm Password</label>
       </div>
 
       <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
     </form>
   </main>
-
+  <script src="/javascripts/main.js"></script>
 </body>
 
 </html>

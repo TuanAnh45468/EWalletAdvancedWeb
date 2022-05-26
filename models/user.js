@@ -33,4 +33,9 @@ const userSchema = new Schema({
     accounts: [{type: Schema.Types.ObjectId, ref: 'Account'}]
 });
 
+userSchema.pre('save', async function() {
+    
+    console.log('saved to mongodb');
+})
+
 module.exports = mongoose.model('User', userSchema);

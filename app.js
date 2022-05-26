@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session')
 const ExpressError = require('./utils/ExpressError')
+const flash = require('connect-flash')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'keyboard cat', cookie: {maxAge: 2000000}}))
+//app.use(flash())
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -32,6 +35,11 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/Ewallet');
   console.log("Connected to MongoDB");
 }
+
+// app.use((req, res, next) =>{
+//   res.locals.changePass =  req.flash('changePass', 'Successfully change password');
+//   next();
+// })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
