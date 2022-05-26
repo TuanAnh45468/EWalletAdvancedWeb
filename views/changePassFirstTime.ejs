@@ -15,21 +15,21 @@
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="stylesheets/mainLayout.css">
+  <link rel="stylesheet" href="/stylesheets/mainLayout.css">
 </head>
 
 <body class="text-center">
   <main class="form-signin w-100 m-auto" style=" max-width: 400px;padding: 15px;">
-    <form>
+    <form action="/users/firstTime" method="post">
       <h1 class="h3 mb-3 fw-normal">Change Password</h1>
       <p class="  ">Please change your password to continuate</p>
 
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="password" placeholder="***">
+        <input type="password" class="form-control" id="password" placeholder="***" name="firstPassword">
         <label for="password">Password</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="confirm-password" placeholder="***">
+        <input type="password" class="form-control" id="confirm-password" placeholder="***" name="secondPassword">
         <label for="confirm-password">Confirm Password</label>
       </div>
 

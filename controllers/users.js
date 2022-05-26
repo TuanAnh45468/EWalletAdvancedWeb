@@ -3,24 +3,30 @@ const Account = require('../models/account')
 const {cloudinary} = require('../cloudinary/index')
 const nodemailer = require('nodemailer')
 
+
+
 module.exports.createUser = async (req, res, next) =>{
+    const userAccount = generateUser(10);
     const user = new User(req.body);
     const email = req.body.email;
-    createAccount(email);
+
+    req.session.email = email;
+    req.session.userAccount = userAccount;
+    
+    createAccount(email, userAccount);
     user.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     //user.backImages = req.files.map(f => ({url: f.path, filename: f.filename}));
-    user.accounts = "628dfd4ba2bd66986c594c5c";
     await user.save();
-    console.log(user);
+    //console.log(user);
     res.redirect('/users/firstTime')
 }
 
-const createAccount = function(email){
-    const username = generateUser(10);
+const createAccount = function(email, userAccount){
+    
     const password = generatePassword(6)
     const account = new Account(
         {
-            username: username,
+            username: userAccount,
             password: password,
             state: 'notValidated',
             failureTime: 0
@@ -32,8 +38,8 @@ const createAccount = function(email){
     var mailOptions = {
         from: 'anh97059@gmail.com',
         to: `${email}`,
-        subject: 'Sending email using Node.js',
-        text: `Username: ${username} \n` +  `Password: ${password}`
+        subject: 'Your New Account',
+        text: `Username: ${userAccount} \n` +  `Password: ${password}`
     };
     
     transporter.sendMail(mailOptions, function(error, info){

@@ -1,4 +1,5 @@
 var nodemailer = require('nodemailer')
+const Account = require('./models/account')
 
 var digits = Math.floor(Math.random() * 9000000000) + 1000000000;
 //console.log(digits);
@@ -36,10 +37,10 @@ var transporter = nodemailer.createTransport({
     }
 })
 
-var mailOptions = {
+/* var mailOptions = {
     from: 'anh97059@gmail.com',
     to: 'tuananh45468@gmail.com',
-    subject: 'Sending email using Node.js',
+    subject: 'Your New Account EWallet',
     text: `Username: ${generateUser(10)} \n` +  `Password: ${password(6)}`
 };
 
@@ -49,4 +50,8 @@ transporter.sendMail(mailOptions, function(error, info){
     } else {
         console.log('Email sent: ' + info.response);
     }
-});
+}); */
+
+//have to use async when find
+// const userAccount = Account.find({})
+// console.log(userAccount);
