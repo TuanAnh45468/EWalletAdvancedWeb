@@ -2,10 +2,15 @@ const User = require('../models/user')
 const Account = require('../models/account')
 const {cloudinary} = require('../cloudinary/index')
 const nodemailer = require('nodemailer')
+var express = require('express');
+var router = express.Router();
+const ExpressError= require('../utils/ExpressError')
+const {registerSchemas} = require('../schemas.js')
+const catchAsync = require('../utils/catchAsync'); 
 
 
 
-module.exports.createUser = async (req, res, next) =>{
+module.exports.createUser =  async (req, res, next) =>{
     const userAccount = generateUser(10);
     const user = new User(req.body);
     const email = req.body.email;
@@ -19,6 +24,17 @@ module.exports.createUser = async (req, res, next) =>{
     await user.save();
     //console.log(user);
     res.redirect('/users/firstTime')
+}
+
+const validateEmail = (req, res, next) =>{
+    const {error} = registerSchemas.validate(req.body);
+
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+      } else {
+        next();
+      }
 }
 
 const createAccount = function(email, userAccount){
@@ -80,3 +96,10 @@ var transporter = nodemailer.createTransport({
         pass: '0978233845'
     }
 })
+
+router.use((err, req, res, next) =>{
+    const {statusCode = 500} = err;
+    if(!err.message) err.message = 'Oh no no, something went wrong';
+    res.status(statusCode).render('error', {err});
+  })
+  
