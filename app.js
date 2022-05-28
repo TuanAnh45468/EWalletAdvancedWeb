@@ -3,6 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session')
+const ExpressError = require('./utils/ExpressError')
+const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const Account = require('./models/account')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,6 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret: 'keyboard cat', cookie: {maxAge: 2000000}}))
+//app.use(flash())
+
+// app.use(passport.initialize())
+// app.use(passport.session());
+// passport.use(new LocalStrategy(Account.authenticate()));
+
+// passport.serializeUser(Account.serializeUser())
+// passport.deserializeUser(Account.deserializeUser())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -29,6 +44,11 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/Ewallet');
   console.log("Connected to MongoDB");
 }
+
+// app.use((req, res, next) =>{
+//   res.locals.changePass =  req.flash('changePass', 'Successfully change password');
+//   next();
+// })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
