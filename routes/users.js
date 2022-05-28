@@ -147,6 +147,14 @@ router.post('/changePass', isLoggin, catchAsync( async (req, res, next) => {
   
 }))
 
+router.get('/otp', (req, res, next) =>{
+  res.render('enterOTP')
+})
+
+router.get('/restore', (req, res, next) =>{
+  res.render('restorePass')
+})
+
 router.use((err, req, res, next) =>{
   const {statusCode = 500} = err;
   if(!err.message) err.message = 'Oh no no, something went wrong';
