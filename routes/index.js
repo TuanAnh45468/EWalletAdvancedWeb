@@ -1,22 +1,29 @@
 var express = require('express');
 var router = express.Router();
+const Account = require('../models/account')
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('mainLayout', { title: 'Express' });
+router.get('/validated', async function(req, res, next) {
+  ///const accounts = await Account.find();
+
+  const accounts = await Account.find({state: "validated"})
+
+  res.render('mainLayout', {accounts});
 });
 
-router.get("/changePass", function(req, res, next) {
-  res.render('changePass');
-})
+router.get('/notValidated', async function(req, res, next) {
+  const accounts = await Account.find({state: "notValidated"})
+  res.render('mainLayout', {accounts});
+});
 
+router.get('/disabled', async function(req, res, next) {
+  const accounts = await Account.find({state: "disabled"})
+  res.render('mainLayout', {accounts});
+});
 
-router.get("/transferMoney", function(req, res, next) {
-  res.render('transferMoney');
-})
-
-router.get("/updateProfile", function(req, res, next) {
-  res.render('updateProfile');
-})
+router.get('/locked', async function(req, res, next) {
+  const accounts = await Account.find({state: "locked"})
+  res.render('mainLayout', {accounts});
+});
 
 module.exports = router;
