@@ -7,6 +7,7 @@ var router = express.Router();
 const ExpressError= require('../utils/ExpressError')
 const {registerSchemas} = require('../schemas.js')
 const catchAsync = require('../utils/catchAsync'); 
+const {generateUser, generatePassword} = require('../middleware')
 
 
 
@@ -62,7 +63,7 @@ const createAccount = function(email, userAccount){
         subject: 'Your New Account',
         text: `Username: ${userAccount} \n` +  `Password: ${password}`
     };
-    
+
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);
@@ -72,33 +73,11 @@ const createAccount = function(email, userAccount){
     });
 };
 
-const generatePassword = function generateRandom3Characters(size) {
-    var generatedOutput= '';
-    var storedCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var totalCharacterSize = storedCharacters.length;
-
-    for ( var index = 0; index < size; index++ ) {
-       generatedOutput+=storedCharacters.charAt(Math.floor(Math.random() *
-       totalCharacterSize));
-    }
-    return generatedOutput;
-};
-
-const generateUser = function randomUsername(size){
-    var generatedOutput= '';
-    var storedCharacters = '0123456789';
-    var totalCharacterSize = storedCharacters.length;
-    for ( var index = 0; index < size; index++ ) {
-       generatedOutput+=storedCharacters.charAt(Math.floor(Math.random() * totalCharacterSize));
-    }
-    return generatedOutput;
-}
-
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'anh97059@gmail.com',
-        pass: '0978233845'
+        pass: `${process.env.EMAILPASSWORD}`
     }
 })
 
