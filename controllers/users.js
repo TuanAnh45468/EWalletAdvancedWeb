@@ -32,6 +32,29 @@ module.exports.createUser =  async (req, res, next) =>{
     }
 }
 
+module.exports.sendOTP = async(req, res, next) =>{
+    const email = req.body.email;
+    req.session.email = email;
+    const otp = generateUser(6)
+    req.session.otp = otp;
+
+    var optOption = {
+        from: 'anh97059@gmail.com',
+        to: `${email}`,
+        subject: 'Your OTP Code',
+        text: `Entern your OTP Code: ${otp}`
+    };
+
+    transporter.sendMail(optOption, function(error, info){
+        if(error){
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    res.redirect('otp')
+}
+
 const validateEmail = (req, res, next) =>{
     const {error} = registerSchemas.validate(req.body);
 

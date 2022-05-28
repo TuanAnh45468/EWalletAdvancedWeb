@@ -19,7 +19,16 @@ const accountSchema = new Schema({
         enum: ['validated', 'notValidated']
     },
 
-    failureTime: Number
+    failureTime: Number,
+    
+    date: {
+        type: Date,
+        default: Date.now()
+    },
+    role: {
+        type: String,
+        default: "USER"
+    }
 })
 
 //accountSchema.plugin(passportLocalMongoose)

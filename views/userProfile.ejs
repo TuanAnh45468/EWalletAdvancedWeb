@@ -37,10 +37,10 @@
                 <img src="<%=user.images[0].url%> " alt="Admin" class="rounded-circle"
                   width="150" />
                 <div class="mt-3">
-                  <h4>John Doe</h4>
+                  <h4><%= user.name %> </h4>
                   <p class="text-secondary mb-1">Full Stack Developer</p>
                   <p class="text-muted font-size-sm">
-                    Bay Area, San Francisco, CA
+                    <%= user.address %>
                   </p>
                   <button class="btn btn-primary">Follow</button>
                   <button class="btn btn-outline-primary">Message</button>
