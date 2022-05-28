@@ -12,7 +12,7 @@ const catchAsync = require('../utils/catchAsync');
 
 module.exports.createUser =  async (req, res, next) =>{
     const email = req.body.email;
-    const existUser = User.findOne({email: email});
+    const existUser =  await User.findOne({email: email});
 
     if(existUser){
         res.redirect('/users/register')

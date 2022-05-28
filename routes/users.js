@@ -18,10 +18,16 @@ const ExpressError= require('../utils/ExpressError')
 const {changePassFirstSchemas} = require('../schemas.js')
 
 const isLoggin = (req, res, next) =>{
-  if(!req.session._id){
+  if(!req.session.userId){
     return res.redirect('/users/login')
   }
   next();
+}
+
+const isValidate = (req, res, next) =>{
+  if(req.session.state == "notValidated"){
+    
+  }
 }
 
 const validateChangePassFirst = (req, res, next) =>{
@@ -56,14 +62,16 @@ router.get("/login", function(req, res, next) {
 router.post('/login', async function(req, res, next) {
   const username = req.body.username;
   const password = req.body.password;
-  console.log(password);
+  //console.log(password);
   const account = await Account.findOne({username: username})
   const hash = account.password;
 
   bcrypt.compare(password, hash, function(err, result) {
     console.log(result);
     if(result == true){
-      res.redirect('/')
+      req.session.state = account.state;
+      req.session.userId = account._id;
+      res.redirect('/users')
     } else {
       res.redirect('/users/login')
     }
@@ -72,11 +80,12 @@ router.post('/login', async function(req, res, next) {
 })
 
 router.get('/logout', function(req, res, next) {
+  req.session.userId = null;
   req.session.destroy();
   res.redirect('/users/login')
 })
 
-router.get('/firstTime',catchAsync(async (req, res, next) => {
+router.get('/firstTime', catchAsync(async (req, res, next) => {
   const userAccount = await  Account.findOne({username: req.session.userAccount})
   const user = await User.findOneAndUpdate({email: req.session.email}, {accounts: userAccount._id})
   const email = req.session.email;
@@ -97,15 +106,15 @@ router.post('/firstTime', validateChangePassFirst, catchAsync(async (req, res, n
   res.redirect('/');
 }))
 
-router.get('/transferMoney', (req, res, next) =>{
+router.get('/transferMoney', isLoggin, (req, res, next) =>{
   res.render('transferMoney');
 })
 
-router.get('/updateProfile', (req, res, next) =>{
+router.get('/updateProfile', isLoggin, (req, res, next) =>{
   res.render('updateProfile');
 })
 
-router.get('/changePass', (req, res, next) => {
+router.get('/changePass', isLoggin, (req, res, next) => {
   res.render('changePass');
 })
 

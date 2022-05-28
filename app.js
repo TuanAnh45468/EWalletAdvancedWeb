@@ -6,6 +6,9 @@ var logger = require('morgan');
 var session = require('express-session')
 const ExpressError = require('./utils/ExpressError')
 const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const Account = require('./models/account')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,6 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'keyboard cat', cookie: {maxAge: 2000000}}))
 //app.use(flash())
 
+// app.use(passport.initialize())
+// app.use(passport.session());
+// passport.use(new LocalStrategy(Account.authenticate()));
+
+// passport.serializeUser(Account.serializeUser())
+// passport.deserializeUser(Account.deserializeUser())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
