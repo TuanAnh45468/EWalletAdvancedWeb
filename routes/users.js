@@ -151,9 +151,47 @@ router.get('/otp', (req, res, next) =>{
   res.render('enterOTP')
 })
 
+router.post('/otp', (req, res, next) =>{
+  const confirmOtp = req.body.otp;
+  if(confirmOtp == req.session.otp){
+    res.redirect('/users/restore')
+  } else {
+    res.redirect('/users/otp')
+  }
+})
+
 router.get('/restore', (req, res, next) =>{
   res.render('restorePass')
 })
+
+router.post('/restore',async (req, res, next) =>{
+  const {newPassword, confirmPassword} = req.body;
+  const user = await User.findOne({email: req.session.email})
+  //console.log(user.accounts[0]);
+  const account = await Account.findById(user.accounts)
+
+  if (newPassword == confirmPassword) {
+    bcrypt.hash(newPassword, saltRounds, function(err, hash){
+      if (err) {
+        console.log(err, "Not Found Account");
+      }
+      account.password = hash;
+      account.save();
+    })
+    res.redirect('/users/login')
+  }
+
+  res.redirect('/users/restore')
+})
+
+router.get('/email', (req, res, next) =>{
+  res.render('enterEmail')
+})
+
+router.post('/email', catchAsync(userController.sendOTP), function (req, res, next) {
+  
+})
+
 
 router.use((err, req, res, next) =>{
   const {statusCode = 500} = err;
