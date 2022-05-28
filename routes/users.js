@@ -110,8 +110,24 @@ router.get('/transferMoney', isLoggin, (req, res, next) =>{
   res.render('transferMoney');
 })
 
-router.get('/updateProfile', isLoggin, (req, res, next) =>{
-  res.render('updateProfile');
+router.get('/updateProfile', isLoggin, async (req, res, next) =>{
+  //const account = req.session.userId;
+  const user = await User.findOne({accounts: req.session.userId})
+  res.render('updateProfile', {user});
+})
+
+router.post('/updateProfile', async (req, res, next) =>{
+  const {name, phoneNumber, email, address, birthday} = req.body;
+  //const account = req.session.userId;
+  const user = await User.findOne({accounts: req.session.userId})
+  
+  user.name = name;
+  user.phoneNumber = phoneNumber;
+  user.email = email;
+  user.address = address;
+  user.birthday = birthday;
+  user.save()
+  res.redirect('/users');
 })
 
 router.get('/userProfile', isLoggin, catchAsync(async(req, res, next) =>{
