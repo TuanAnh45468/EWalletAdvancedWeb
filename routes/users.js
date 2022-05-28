@@ -103,7 +103,7 @@ router.post('/firstTime', validateChangePassFirst, catchAsync(async (req, res, n
     userAccount.password = hash;
     userAccount.save();
   })
-  res.redirect('/');
+  res.redirect('/users');
 }))
 
 router.get('/transferMoney', isLoggin, (req, res, next) =>{
@@ -114,9 +114,38 @@ router.get('/updateProfile', isLoggin, (req, res, next) =>{
   res.render('updateProfile');
 })
 
+router.get('/userProfile', isLoggin, catchAsync(async(req, res, next) =>{
+  //console.log(req.session.userId);
+  const user = await User.findOne({accounts: req.session.userId})
+  //console.log(user.images[0].url);
+  //console.log(user);
+
+  res.render('userProfile', {user})
+}))
+
 router.get('/changePass', isLoggin, (req, res, next) => {
   res.render('changePass');
 })
+
+router.post('/changePass', isLoggin, catchAsync( async (req, res, next) => {
+  const accountId = req.session.userId;
+  const {oldPassword, newPassword, confirmPassword} = req.body;
+  const account =  await Account.findById(accountId);
+
+  bcrypt.compare(oldPassword, account.password,async function(err, isCorrectPass){
+    if(isCorrectPass){
+      if(newPassword == confirmPassword){
+          bcrypt.hash(confirmPassword, saltRounds,async function(err, hash){
+          account.password = hash;
+          account.save();
+        })
+        res.redirect('/users');
+      }
+    }
+    res.redirect('/users/changePass')
+  })
+  
+}))
 
 router.use((err, req, res, next) =>{
   const {statusCode = 500} = err;

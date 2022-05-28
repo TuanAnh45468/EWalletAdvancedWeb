@@ -12,7 +12,8 @@ const userSchema = new Schema({
     },
     balance: {
         type: Number,
-        min: [0, 'Money must greater than 0']
+        min: [0, 'Money must greater than 0'],
+        default: 0
     },
     phoneNumber: String,
     birthday: String,
