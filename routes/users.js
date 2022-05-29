@@ -15,7 +15,8 @@ const Account = require('../models/account')
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const ExpressError= require('../utils/ExpressError')
-const {changePassFirstSchemas} = require('../schemas.js')
+const {changePassFirstSchemas} = require('../schemas.js');
+const { default: mongoose, mongo } = require('mongoose');
 
 const isLoggin = (req, res, next) =>{
   if(!req.session.userId){
@@ -206,6 +207,15 @@ router.get('/email', (req, res, next) =>{
 
 router.post('/email', catchAsync(userController.sendOTP), function (req, res, next) {
   
+})
+
+router.get('/:id', async (req, res, next) =>{
+  // console.log(req.params);
+  // const accountId = req.params;
+  const user = await User.findOne({accounts: mongoose.Types.ObjectId(accountId)})
+  console.log(user.name);
+  //res.send("hello")
+  res.render('userProfile', {user})
 })
 
 

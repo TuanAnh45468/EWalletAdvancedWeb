@@ -50,7 +50,7 @@
   <section class="sidebar flex-column flex-shrink-0 bg-light h-100 p-2" style="width: 280px;">
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="#" class="nav-link active ps-3 py-3" aria-current="page">
+        <a href="/" class="nav-link active ps-3 py-3" aria-current="page">
           Home
         </a>
       </li>
@@ -64,6 +64,12 @@
   <div class="main-content p-5 ">
     <!-- Pass your content here -->
     <h1 class="display-1 text-center">Admin Homepage</h1>
+    <div class="btn-group mb-2">
+      <a href="/validated" class="btn btn-success">Validated Account</a>
+      <a href="/notValidated" class="btn btn-warning">NotValidated Account</a>
+      <a href="/disabled" class="btn btn-danger">Disabled Account</a>
+      <a href="/locked" class="btn btn-primary">Locked Account</a>
+    </div>
     <table class="table table-success table-striped">
       <thead>
         <tr>
@@ -79,7 +85,10 @@
           <tr>
             <th scope="row"><%=index%></th>
             <td><%= account.username%> </td>
-            <td><%= account._id%></td>
+            <td>
+              <a href="/users/<%=account._id %>"><%= account._id%></a> 
+              
+            </td>
             <td><%= account.state%></td>
             <td>@<%= account.date%></td>
           </tr>

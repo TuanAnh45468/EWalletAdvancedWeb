@@ -1,12 +1,20 @@
 var express = require('express');
 var router = express.Router();
 const Account = require('../models/account')
+const mongoose = require('mongoose')
 
 /* GET home page. */
+
+router.get('/', async function(req, res, next) {
+  const accounts = await Account.find({}).sort('-date')
+  res.render('mainLayout', {accounts});
+});
+
 router.get('/validated', async function(req, res, next) {
   ///const accounts = await Account.find();
-
-  const accounts = await Account.find({state: "validated"})
+  
+  const accounts = await Account.find({state: "validated"}).sort('-date')
+  
 
   res.render('mainLayout', {accounts});
 });
@@ -17,12 +25,12 @@ router.get('/notValidated', async function(req, res, next) {
 });
 
 router.get('/disabled', async function(req, res, next) {
-  const accounts = await Account.find({state: "disabled"})
+  const accounts = await Account.find({state: "disabled"}).sort('-date')
   res.render('mainLayout', {accounts});
 });
 
 router.get('/locked', async function(req, res, next) {
-  const accounts = await Account.find({state: "locked"})
+  const accounts = await Account.find({state: "locked"}).sort('-date')
   res.render('mainLayout', {accounts});
 });
 
