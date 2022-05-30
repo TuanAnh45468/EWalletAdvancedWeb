@@ -39,7 +39,7 @@ module.exports.sendOTP = async(req, res, next) =>{
     req.session.otp = otp;
 
     var optOption = {
-        from: 'anh97059@gmail.com',
+        from: 'tienbatkhathi@gmail.com',
         to: `${email}`,
         subject: 'Your OTP Code',
         text: `Entern your OTP Code: ${otp}`
@@ -81,7 +81,7 @@ const createAccount = function(email, userAccount){
     account.save();
 
     var mailOptions = {
-        from: 'anh97059@gmail.com',
+        from: 'tienbatkhathi@gmail.com',
         to: `${email}`,
         subject: 'Your New Account',
         text: `Username: ${userAccount} \n` +  `Password: ${password}`
@@ -99,7 +99,7 @@ const createAccount = function(email, userAccount){
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'anh97059@gmail.com',
+        user: 'tienbatkhathi@gmail.com',
         pass: `${process.env.EMAILPASSWORD}`
     }
 })

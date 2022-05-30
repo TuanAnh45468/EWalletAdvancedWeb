@@ -110,6 +110,10 @@ router.get('/transferMoney', isLoggin, (req, res, next) =>{
   res.render('transferMoney');
 })
 
+router.get('/addMoney', isLoggin, (req, res, next) =>{
+  res.render('addMoney');
+})
+
 router.get('/updateProfile', isLoggin, async (req, res, next) =>{
   //const account = req.session.userId;
   const user = await User.findOne({accounts: req.session.userId})
