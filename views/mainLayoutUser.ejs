@@ -49,11 +49,20 @@
 
   <section class="sidebar flex-column flex-shrink-0 bg-light h-100 p-2" style="width: 280px;">
     <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a href="/users" class="nav-link active ps-3 py-3" aria-current="page">
-          Home
-        </a>
-      </li>
+      <% if (account.role == "ADMIN") { %>
+        <li class="nav-item">
+          <a href="/" class="nav-link active ps-3 py-3" aria-current="page">
+            Admin Home
+          </a>
+        </li>
+      <% } else {%>
+        <li class="nav-item">
+          <a href="/users" class="nav-link active ps-3 py-3" aria-current="page">
+            Home
+          </a>
+        </li>
+        <% } %> 
+
       <li><a href="/users/updateProfile" class="nav-link link-dark ps-3 py-3">Update Profile</a></li>
       <li><a href="/users/userProfile" class="nav-link link-dark ps-3 py-3">Profile</a></li>
       <li><a href="/users/changePass" class="nav-link link-dark ps-3 py-3">Change Pass</a></li>

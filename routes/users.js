@@ -43,8 +43,9 @@ const validateChangePassFirst = (req, res, next) =>{
   }
 } 
 
-router.get('/', function(req, res, next) {
-  res.render('mainLayoutUser')
+router.get('/', isLoggin, async function(req, res, next) {
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
+  res.render('mainLayoutUser', {account})
 })
 
 router.get('/register', function(req, res, next){
@@ -118,7 +119,7 @@ router.get('/updateProfile', isLoggin, async (req, res, next) =>{
   res.render('updateProfile', {user});
 })
 
-router.post('/updateProfile', async (req, res, next) =>{
+router.post('/updateProfile', isLoggin, async (req, res, next) =>{
   const {name, phoneNumber, email, address, birthday} = req.body;
   //const account = req.session.userId;
   const user = await User.findOne({accounts: req.session.userId})
@@ -135,10 +136,11 @@ router.post('/updateProfile', async (req, res, next) =>{
 router.get('/userProfile', isLoggin, catchAsync(async(req, res, next) =>{
   //console.log(req.session.userId);
   const user = await User.findOne({accounts: req.session.userId})
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
   //console.log(user.images[0].url);
   //console.log(user);
 
-  res.render('userProfile', {user})
+  res.render('userProfile', {user, account})
 }))
 
 router.get('/changePass', isLoggin, (req, res, next) => {
@@ -210,7 +212,7 @@ router.post('/email', catchAsync(userController.sendOTP), function (req, res, ne
   
 })
 
-router.get('/validate/:id', async (req, res, next) =>{
+router.get('/validate/:id', isLoggin, async (req, res, next) =>{
   const id = req.params;
   const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
     if(err){
@@ -223,7 +225,7 @@ router.get('/validate/:id', async (req, res, next) =>{
   return res.redirect('/validated')
 })
 
-router.get('/lock/:id', async (req, res, next) =>{
+router.get('/lock/:id', isLoggin, async (req, res, next) =>{
   const id = req.params;
   const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
     if(err){
@@ -249,7 +251,7 @@ router.get('/reup/:id', async (req, res, next) =>{
   return res.redirect('/')
 })
 
-router.get('/unlock/:id', async (req, res, next) =>{
+router.get('/unlock/:id', isLoggin, async (req, res, next) =>{
   const id = req.params;
   const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
     if(err){
@@ -262,7 +264,7 @@ router.get('/unlock/:id', async (req, res, next) =>{
   return res.redirect('/validated')
 })
 
-router.get('/:id', async (req, res, next) =>{
+router.get('/:id', isLoggin, async (req, res, next) =>{
   const accountId = req.params;
   const account = await Account.findById(mongoose.Types.ObjectId(accountId))
   const user = await User.findOne({accounts: mongoose.Types.ObjectId(accountId)})

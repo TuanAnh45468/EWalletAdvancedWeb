@@ -174,18 +174,19 @@
 
               <div class="row">
                 <div class="col-sm-12">
-                  <div class="btn-group mb-2"> 
-
-                    <% if (account.state=="notValidated" ) { %>
-                      <a href="/users/validate" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validate">Validate Account</a>
-                      <a href="/users/lock" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#lock">Lock Account</a>
-                      <a href="/users/reup" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reup">Reup Image</a>
-                      <% } if(account.state=="locked" || account.state=="disabled") {%>
-                        <a href="/users/unlock" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unlock">Unlock Account</a>
-                        <% } if(account.state == "validated"){ %>
+                  <% if (account.role == "ADMIN") { %>
+                    <div class="btn-group mb-2"> 
+                      <% if (account.state=="notValidated" ) { %>
+                        <a href="/users/validate" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validate">Validate Account</a>
                         <a href="/users/lock" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#lock">Lock Account</a>
-                        <% } %> 
-                  </div>
+                        <a href="/users/reup" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reup">Reup Image</a>
+                        <% } if(account.state=="locked" || account.state=="disabled") {%>
+                          <a href="/users/unlock" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unlock">Unlock Account</a>
+                          <% } if(account.state == "validated"){ %>
+                          <a href="/users/lock" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#lock">Lock Account</a>
+                          <% } %> 
+                    </div>
+                  <% } %>
                 </div>
               </div>
               <h1>Transaction history</h1>
