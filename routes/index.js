@@ -1,16 +1,32 @@
 var express = require('express');
 var router = express.Router();
 const Account = require('../models/account')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const catchAsync = require('../utils/catchAsync');
 
-/* GET home page. */
+const isAdmin = async (req, res, next) => {
+  //console.log(req.session.userId);
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, result){
+    if (err) {
+      console.log(err);
+    }
+    if(result.role == 'ADMIN'){
+      next();
+    }
+    else {
+      return res.redirect('/users')
+    }
+    //console.log(result);
+  }).clone()
+}
 
-router.get('/', async function(req, res, next) {
+
+router.get('/', catchAsync(isAdmin), async function(req, res, next) {
   const accounts = await Account.find({}).sort('-date')
   res.render('mainLayout', {accounts});
 });
 
-router.get('/validated', async function(req, res, next) {
+router.get('/validated', catchAsync(isAdmin), async function(req, res, next) {
   ///const accounts = await Account.find();
   
   const accounts = await Account.find({state: "validated"}).sort('-date')
@@ -19,19 +35,20 @@ router.get('/validated', async function(req, res, next) {
   res.render('mainLayout', {accounts});
 });
 
-router.get('/notValidated', async function(req, res, next) {
+router.get('/notValidated', catchAsync(isAdmin), async function(req, res, next) {
   const accounts = await Account.find({state: "notValidated"})
   res.render('mainLayout', {accounts});
 });
 
-router.get('/disabled', async function(req, res, next) {
+router.get('/disabled', catchAsync(isAdmin), async function(req, res, next) {
   const accounts = await Account.find({state: "disabled"}).sort('-date')
   res.render('mainLayout', {accounts});
 });
 
-router.get('/locked', async function(req, res, next) {
+router.get('/locked', catchAsync(isAdmin), async function(req, res, next) {
   const accounts = await Account.find({state: "locked"}).sort('-date')
   res.render('mainLayout', {accounts});
 });
+
 
 module.exports = router;
