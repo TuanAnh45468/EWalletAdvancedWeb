@@ -16,7 +16,8 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const ExpressError= require('../utils/ExpressError')
 const {changePassFirstSchemas} = require('../schemas.js');
-const { default: mongoose, mongo } = require('mongoose');
+const { default: mongoose} = require('mongoose');
+const History = require('../models/history')
 
 const isLoggin = (req, res, next) =>{
   if(!req.session.userId){
@@ -209,20 +210,70 @@ router.post('/email', catchAsync(userController.sendOTP), function (req, res, ne
   
 })
 
+router.get('/validate/:id', async (req, res, next) =>{
+  const id = req.params;
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
+    if(err){
+      console.log(err);
+    } else {
+      result.state = "validated"
+      result.save();
+    }
+  }).clone()
+  return res.redirect('/validated')
+})
+
+router.get('/lock/:id', async (req, res, next) =>{
+  const id = req.params;
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
+    if(err){
+      console.log(err);
+    } else {
+      result.state = "locked"
+      result.save();
+    }
+  }).clone()
+  return res.redirect('/locked')
+})
+
+router.get('/reup/:id', async (req, res, next) =>{
+  const id = req.params;
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
+    if(err){
+      console.log(err);
+    } else {
+      result.state = "validated"
+      result.save();
+    }
+  }).clone()
+  return res.redirect('/validated')
+})
+
+router.get('/unlock/:id', async (req, res, next) =>{
+  const id = req.params;
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
+    if(err){
+      console.log(err);
+    } else {
+      result.state = "validated"
+      result.save();
+    }
+  }).clone()
+  return res.redirect('/validated')
+})
+
 router.get('/:id', async (req, res, next) =>{
-  // console.log(req.params);
-  // const accountId = req.params;
+  const accountId = req.params;
+  const account = await Account.findById(mongoose.Types.ObjectId(accountId))
   const user = await User.findOne({accounts: mongoose.Types.ObjectId(accountId)})
-  console.log(user.name);
-  //res.send("hello")
-  res.render('userProfile', {user})
+  res.render('userProfile', {user, account})
 })
 
 
-router.use((err, req, res, next) =>{
-  const {statusCode = 500} = err;
-  if(!err.message) err.message = 'Oh no no, something went wrong';
-  res.status(statusCode).render('error', {err});
-})
+// router.use((err, req, res, next) =>{
+//   const {statusCode = 500} = err;
+//   if(!err.message) err.message = 'Oh no no, something went wrong';
+//   res.status(statusCode).render('error', {err});
+// })
 
 module.exports = router;

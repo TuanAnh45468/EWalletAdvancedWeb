@@ -3,14 +3,19 @@ const Schema = mongoose.Schema;
 const User = require('../models/user')
 
 const historySchema = new Schema({
-    type: String,
+    type: {
+        type: String,
+        enum: ['creditCard', 'mobileCard', 'null'],
+        default: 'null'
+    },
     money: Number,
     time: Date,
     state: {
         type: String,
-        enum: ['done', 'waiting']
+        enum: ['done', 'waiting', 'canceled', 'null'],
+        default: "null"
     },
-    users: [{type: Schema.Types.ObjectId, ref: 'User'}]
+    accounts: [{type: Schema.Types.ObjectId, ref: 'User'}]
 })
 
 module.exports = mongoose.model('History', historySchema);

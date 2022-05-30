@@ -8,6 +8,8 @@ const ExpressError= require('../utils/ExpressError')
 const {registerSchemas} = require('../schemas.js')
 const catchAsync = require('../utils/catchAsync'); 
 const {generateUser, generatePassword} = require('../middleware')
+const History = require('../models/history');
+const { default: mongoose } = require('mongoose');
 
 
 
@@ -23,11 +25,18 @@ module.exports.createUser =  async (req, res, next) =>{
         
         req.session.email = email;
         req.session.userAccount = userAccount;
-        
-        createAccount(email, userAccount);
+
         user.images = req.files.map(f => ({url: f.path, filename: f.filename}));
         await user.save();
-        //console.log(user);
+        await createAccount(email, userAccount);
+
+        // const account = await Account.findOne({username: userAccount}, function(err, doc){
+        //     if(err){
+        //         console.log(err);
+        //     }
+        //     console.log(doc);
+        // }).clone();
+
         res.redirect('/users/firstTime')
     }
 }
@@ -66,19 +75,24 @@ const validateEmail = (req, res, next) =>{
       }
 }
 
-const createAccount = function(email, userAccount){
+const createAccount = async function(email, userAccount){
     
     const password = generatePassword(6)
-    const account = new Account(
+    const account =  new Account(
         {
             username: userAccount,
             password: password,
             state: 'notValidated',
-            failureTime: 0
+            failureTime: 0,
         }
         
     )
-    account.save();
+    account.history = [{
+        transactionType: 'null',
+        money: 0,
+        state: 'null'
+    }]
+    await account.save();
 
     var mailOptions = {
         from: 'anh97059@gmail.com',

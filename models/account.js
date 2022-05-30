@@ -1,3 +1,4 @@
+const { number } = require('joi');
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose')
@@ -16,7 +17,7 @@ const accountSchema = new Schema({
 
     state: {
         type: String,
-        enum: ['validated', 'notValidated']
+        enum: ['validated', 'notValidated', 'locked', 'disabled']
     },
 
     failureTime: Number,
@@ -28,7 +29,25 @@ const accountSchema = new Schema({
     role: {
         type: String,
         default: "USER"
-    }
+    },
+
+    history: [{
+        transactionType: {
+            type: String,
+            enum: ['creditCard', 'mobileCard', 'null'],
+            default: 'null'
+        },
+        money: {
+            type: Number,
+            default: 0
+        },
+        transactionTime: Date,
+        state: {
+            type: String,
+            enum: ['done', 'waiting', 'canceled', 'null'],
+            default: "null"
+        },
+    }]
 })
 
 //accountSchema.plugin(passportLocalMongoose)
