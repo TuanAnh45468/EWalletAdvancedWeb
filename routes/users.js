@@ -237,7 +237,7 @@ router.get('/lock/:id', async (req, res, next) =>{
 })
 
 router.get('/reup/:id', async (req, res, next) =>{
-  const id = req.params;
+/*   const id = req.params;
   const account = await Account.findById({_id: mongoose.Types.ObjectId(id)}, function(err, result){
     if(err){
       console.log(err);
@@ -245,8 +245,8 @@ router.get('/reup/:id', async (req, res, next) =>{
       result.state = "validated"
       result.save();
     }
-  }).clone()
-  return res.redirect('/validated')
+  }).clone() */
+  return res.redirect('/')
 })
 
 router.get('/unlock/:id', async (req, res, next) =>{
