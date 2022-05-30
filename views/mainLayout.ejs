@@ -15,7 +15,7 @@
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="stylesheets/mainLayout.css">
+  <link rel="stylesheet" href="/stylesheets/mainLayout.css">
 </head>
 
 <body>
@@ -54,8 +54,8 @@
           Home
         </a>
       </li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
-      <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
+      <li><a href="/history" class="nav-link link-dark ps-3 py-3">History</a></li>
+      <li><a href="/historyDetail" class="nav-link link-dark ps-3 py-3">History Detail</a></li>
       <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
       <li><a href="#" class="nav-link link-dark ps-3 py-3">Dashboard</a></li>
     </ul>
@@ -84,34 +84,129 @@
       <tbody>
         <% accounts.forEach(function(account, index) { %>
           <tr>
-            <th scope="row"><%=index%></th>
-            <td><%= account.username%> </td>
+            <th scope="row">
+              <%=index%>
+            </th>
             <td>
-              <a href="/users/<%=account._id %>"><%= account._id%></a> 
-              
+              <%= account.username%>
             </td>
-            <td><%= account.state%></td>
-            <td>@<%= account.date%></td>
-            
-            <div class="btn-group mb-2"> 
             <td>
-              <% if (account.state=="notValidated" ) { %>
-                <a href="/users/validate" class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#validate">Validate Account</a>
-                <a href="/users/lock" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#lock">Lock Account</a>
-                <a href="/users/reup" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reup">Reup Image</a>
-                <% } if(account.state=="locked" || account.state=="disabled") {%>
-                  <a href="/users/unlock" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#unlock">Unlock Account</a>
-                  <% } if(account.state == "validated"){ %>
-                  <a href="/users/lock" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#lock">Lock Account</a>
-                  <% } %> 
+              <a href="/users/<%=account._id %>">
+                <%= account._id%>
+              </a>
+
+            </td>
+            <td>
+              <%= account.state%>
+            </td>
+            <td>@<%= account.date%>
+            </td>
+
+            <div class="btn-group mb-2">
+              <td>
+                <% if (account.state=="notValidated" ) { %>
+                  <a href="/users/validate" class="btn btn-success btn-sm mb-1" data-bs-toggle="modal"
+                    data-bs-target="#validate">Validate Account</a>
+                  <a href="/users/lock" class="btn btn-warning btn-sm mb-1" data-bs-toggle="modal"
+                    data-bs-target="#lock">Lock Account</a>
+                  <a href="/users/reup" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reup">Reup
+                    Image</a>
+                  <% } if(account.state=="locked" || account.state=="disabled" ) {%>
+                    <a href="/users/unlock" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                      data-bs-target="#unlock">Unlock Account</a>
+                    <% } if(account.state=="validated" ){ %>
+                      <a href="/users/lock" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#lock">Lock Account</a>
+                      <% } %>
             </div>
             </td>
           </tr>
-        <% }) %>
+
+          <!--validate Modal -->
+          <div class="modal fade" id="validate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <a class="btn btn-danger" role="button" aria-disabled="true"
+                    href="/users/validate/<%= account.id %>">Validate</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--lock Modal -->
+          <div class="modal fade" id="lock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <a class="btn btn-danger" role="button" aria-disabled="true"
+                    href="/users/lock/<%= account.id %>">Lock</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--unlock Modal -->
+          <div class="modal fade" id="unlock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <a class="btn btn-danger" role="button" aria-disabled="true"
+                    href="/users/unlock/<%= account.id %>">Unlock</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--reup Modal -->
+          <div class="modal fade" id="reup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <a class="btn btn-danger" role="button" aria-disabled="true" href="/users/reup/<%= account.id %>">Reup
+                    Image</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }) %>
       </tbody>
     </table>
-
   </div>
+
+
 </body>
 
 </html>

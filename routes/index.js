@@ -35,10 +35,7 @@ router.get('/', isLoggin, catchAsync(isAdmin), async function(req, res, next) {
 
 router.get('/validated', isLoggin, catchAsync(isAdmin), async function(req, res, next) {
   ///const accounts = await Account.find();
-  
   const accounts = await Account.find({state: "validated"}).sort('-date')
-  
-
   res.render('mainLayout', {accounts});
 });
 
@@ -56,6 +53,11 @@ router.get('/locked', isLoggin, catchAsync(isAdmin), async function(req, res, ne
   const accounts = await Account.find({state: "locked"}).sort('-date')
   res.render('mainLayout', {accounts});
 });
+
+router.get('/history', isLoggin, catchAsync(isAdmin), async function(req, res, next) {
+  const accounts = await Account.find({}).clone()
+  res.render('history', {accounts})
+})
 
 
 module.exports = router;
