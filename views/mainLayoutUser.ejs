@@ -75,6 +75,9 @@
   <div class="main-content p-5 ">
     <!-- Pass your content here -->
     <h1 class="display-1 text-center">User Home page</h1>
+    <% if (messages.length > 0) { %>
+    <div class="alert alert-success" role="alert"><%=messages%> </div>
+    <% } %>
   </div>
 </body>
 

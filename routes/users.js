@@ -17,7 +17,8 @@ const saltRounds = 10;
 const ExpressError= require('../utils/ExpressError')
 const {changePassFirstSchemas} = require('../schemas.js');
 const { default: mongoose} = require('mongoose');
-const History = require('../models/history')
+const CreditCard = require('../models/creditCard')
+const MobileCard = require('../models/mobileCard')
 
 const isLoggin = (req, res, next) =>{
   if(!req.session.userId){
@@ -45,7 +46,8 @@ const validateChangePassFirst = (req, res, next) =>{
 
 router.get('/', isLoggin, async function(req, res, next) {
   const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
-  res.render('mainLayoutUser', {account})
+  //res.send(req.flash('loginSuccess'))
+  res.render('mainLayoutUser', {account, messages: req.flash('loginSuccess')})
 })
 
 router.get('/register', function(req, res, next){
@@ -58,7 +60,6 @@ router.post('/register', upload.any('frontImage', 'backImage'), catchAsync(userC
 })
 
 router.get("/login", function(req, res, next) {
-  req.session.destroy();
   res.render('login');
 })
 
@@ -74,6 +75,7 @@ router.post('/login', async function(req, res, next) {
     if(result == true){
       req.session.state = account.state;
       req.session.userId = account._id;
+      req.flash('loginSuccess', 'Login successfull!')
       res.redirect('/users')
     } else {
       res.redirect('/users/login')
@@ -114,7 +116,77 @@ router.get('/transferMoney', isLoggin, (req, res, next) =>{
 })
 
 router.get('/addMoney', isLoggin, (req, res, next) =>{
-  res.render('addMoney');
+  res.render('addMoney', {card: req.flash('card'), success: req.flash('successCard')});
+})
+
+router.post('/addMoney', isLoggin, async (req, res, next) =>{
+  const {money, cardNumber, expireDate, cvv} = req.body;
+  const user = await User.findOne({accounts: req.session.userId}).clone()
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
+
+  const creditCard = await CreditCard.findOne({number: cardNumber}, async function(err, result){
+    if(err){
+      req.flash('card', 'Invalid Card Number')
+      return res.redirect('/users/addMoney')
+    } else {
+      if(result.cvv !== cvv && result.expireDate !== expireDate){
+        req.flash('card', 'Invalid CVV or ExpireDate')
+        return res.redirect('/users/addMoney')
+      }
+      if(cvv == 411){
+        await user.updateOne({$inc: {balance: money}})
+        result.money = (result.money) - money;
+        await result.save()
+        await user.save()
+        await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now()}]}})
+        req.flash('successCard', 'Add money Successfully!')
+        return res.redirect('/users/addMoney')
+
+      } else if (cvv == 443) {
+        if (money > 1000000) {
+          req.flash('card', 'Cannot withdrawl more than 1 million')
+          res.redirect('/users/addMoney')
+        } else {
+          await user.updateOne({$inc: {balance: money}})
+          result.money = (result.money) - money;
+          await result.save()
+          await user.save()
+          await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now()}]}})
+          req.flash('successCard', 'Add money Successfully!!!')
+          return res.redirect('/users/addMoney')
+        }
+
+      } else if (cvv == 577){
+        req.flash('card', 'Out of Money')
+        return res.redirect('/users/addMoney')
+      }
+    }
+  }).clone()
+
+  // if(creditCard.filter(e => e.cvv == cvv && e.number == cardNumber && e.expireDate == expireDate).length <= 0){
+  //   req.flash('card', 'Invalid CVV or Card Number')
+  //   res.redirect('/users/addMoney')
+  // }
+  // else{
+  //   if(cvv == 411){
+
+  //   }
+
+  //   if (cvv == 577) {
+  //     req.flash('card', 'Out of money')
+  //     res.redirect('/users/addMoney')
+  //   }
+  //   if (cvv == 443) {
+  //     if(money > 1000000){
+  //       req.flash('card', 'Cannot charge more than 1 million')
+  //       res.redirect('/users/addMoney')
+  //     } else {
+
+  //     }
+  //   }
+  //   req.flash('successCard', 'Add money successfully!')
+  //   res.redirect('/users/addMoney')
+  // }
 })
 
 router.get('/updateProfile', isLoggin, async (req, res, next) =>{

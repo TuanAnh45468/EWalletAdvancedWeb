@@ -1,5 +1,17 @@
 var nodemailer = require('nodemailer')
 const Account = require('./models/account')
+const CreditCard = require('./models/creditCard')
+const MobileCard = require('./models/mobileCard')
+
+const mongoose = require('mongoose');
+
+// main().catch(err => console.log(err));
+
+// async function main() {
+//   await mongoose.connect('mongodb://localhost:27017/Ewallet');
+//   console.log("Connected to Mongo");
+// }
+
 
 var digits = Math.floor(Math.random() * 9000000000) + 1000000000;
 //console.log(digits);

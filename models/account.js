@@ -34,18 +34,16 @@ const accountSchema = new Schema({
     history: [{
         transactionType: {
             type: String,
-            enum: ['creditCard', 'mobileCard', 'null'],
+            enum: ['creditCard', 'mobileCard', 'withDrawal', 'null'],
             default: 'null'
         },
         money: {
             type: Number,
-            default: 0
         },
         transactionTime: Date,
         state: {
             type: String,
             enum: ['done', 'waiting', 'canceled', 'null'],
-            default: "null"
         },
     }]
 })

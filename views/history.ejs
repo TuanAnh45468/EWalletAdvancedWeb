@@ -69,6 +69,7 @@
         <thead>
           <tr>
             <th scope="col">STT</th>
+            <th scope="col">Account</th>
             <th scope="col">Type</th>
             <th scope="col">Money</th>
             <th scope="col">State</th>
@@ -76,18 +77,27 @@
         </thead>
         <tbody>
           <% (accounts).forEach(function(account, index) { %>
+            
+
             <% if (account.history.length > 0) { %>
                 <% for( let index1 = 0; index1 < (account.history).length; index1++) { %>
                     <tr>
                         <th scope="row">
-                          <%=index1%>
+                            <%=index%>
                         </th>
+                        
+                        <td>
+                            <%= account.username%>
+                        </td>
+                        
                         <td>
                           <%= account.history[index1].transactionType%>
                         </td>
+
                         <td>
                           <%= account.history[index1].money%>
                         </td>
+
                         <td>
                           <%= account.history[index1].state%>
                         </td>

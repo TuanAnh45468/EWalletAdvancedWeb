@@ -8,7 +8,6 @@ const ExpressError= require('../utils/ExpressError')
 const {registerSchemas} = require('../schemas.js')
 const catchAsync = require('../utils/catchAsync'); 
 const {generateUser, generatePassword} = require('../middleware')
-const History = require('../models/history');
 const { default: mongoose } = require('mongoose');
 
 
@@ -87,11 +86,11 @@ const createAccount = async function(email, userAccount){
         }
         
     )
-    account.history = [{
-        transactionType: 'null',
-        money: 0,
-        state: 'null'
-    }]
+    // account.history = [{
+    //     transactionType: 'null',
+    //     money: 0,
+    //     state: 'null'
+    // }]
     await account.save();
 
     var mailOptions = {
