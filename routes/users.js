@@ -20,6 +20,12 @@ const { default: mongoose} = require('mongoose');
 const CreditCard = require('../models/creditCard')
 const MobileCard = require('../models/mobileCard')
 
+const random = (min = 10000, max = 50000) => {
+  let num = Math.random() * (max - min) + min;
+
+  return Math.round(num);
+};
+
 const isLoggin = (req, res, next) =>{
   if(!req.session.userId){
     return res.redirect('/users/login')
@@ -304,6 +310,49 @@ router.get('/email', (req, res, next) =>{
 
 router.post('/email', catchAsync(userController.sendOTP), function (req, res, next) {
   
+})
+
+router.get('/buyCard', isLoggin, async(req, res, next) => {
+
+  res.render('buyMobileCard', {card: req.flash('card'), success: req.flash('successCard')})
+})
+
+router.post('/buyCard', isLoggin, async(req, res, next) => {
+  const {card, type, cardNumber} = req.body;
+  const user = await User.findOne({accounts: mongoose.Types.ObjectId(req.session.userId)}).clone()
+  console.log(user);
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
+  const mobileCard = await MobileCard.findOne({number: cardNumber})
+  console.log(mobileCard);
+  if(user.balance < card){
+    req.flash('card', 'Not ennough money to buy card')
+    return res.redirect('/users/buyCard')
+  }
+  if(card == "Viettel" && cardNumber == "11111"){
+    user.balance = user.balance - type;
+    await user.save();
+    await account.updateOne({$push: {history: [{transactionType: 'mobileCard', money: type, state: 'done', transactionTime: Date.now(), cardNumber: 11111}]}})
+    account.save()
+    req.flash('successCard', 'Bought Card Successfully!')
+    return res.redirect('/users/buyCard')
+
+  } else if (card == "Mobifone" && cardNumber == "22222"){
+    user.balance = user.balance - type;
+    await user.save();
+    await account.updateOne({$push: {history: [{transactionType: 'mobileCard', money: type, state: 'done', transactionTime: Date.now(), cardNumber: 22222}]}})
+    await account.save();
+    req.flash('successCard', 'Bought Card Successfully!')
+    return res.redirect('/users/buyCard')
+
+  } else if (card == "Vinaphone" && cardNumber == "33333"){
+    user.balance = user.balance - type;
+    await user.save();
+    await account.updateOne({$push: {history: [{transactionType: 'mobileCard', money: type, state: 'done', transactionTime: Date.now(), cardNumber: 33333}]}})
+    await account.save()
+    req.flash('successCard', 'Bought Card Successfully!')
+    return res.redirect('/users/buyCard')
+  }
+  res.redirect('/users/buyCard')
 })
 
 router.get('/validate/:id', isLoggin, async (req, res, next) =>{

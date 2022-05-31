@@ -47,7 +47,7 @@ module.exports.sendOTP = async(req, res, next) =>{
     req.session.otp = otp;
 
     var optOption = {
-        from: 'tienbatkhathi@gmail.com',
+        from: `${process.env.EMAIL}`,
         to: `${email}`,
         subject: 'Your OTP Code',
         text: `Entern your OTP Code: ${otp}`
@@ -61,17 +61,6 @@ module.exports.sendOTP = async(req, res, next) =>{
         }
     });
     res.redirect('otp')
-}
-
-const validateEmail = (req, res, next) =>{
-    const {error} = registerSchemas.validate(req.body);
-
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-      } else {
-        next();
-      }
 }
 
 const createAccount = async function(email, userAccount){
@@ -94,7 +83,7 @@ const createAccount = async function(email, userAccount){
     await account.save();
 
     var mailOptions = {
-        from: 'tienbatkhathi@gmail.com',
+        from: `${process.env.EMAIL}`,
         to: `${email}`,
         subject: 'Your New Account',
         text: `Username: ${userAccount} \n` +  `Password: ${password}`
@@ -112,7 +101,7 @@ const createAccount = async function(email, userAccount){
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'tienbatkhathi@gmail.com',
+        user: `${process.env.EMAIL}`,
         pass: `${process.env.EMAILPASSWORD}`
     }
 })
