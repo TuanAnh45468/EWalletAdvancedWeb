@@ -31,10 +31,15 @@ const accountSchema = new Schema({
         default: "USER"
     },
 
+    withdrawalTime: {
+        type: Number,
+        default: 0
+    },
+
     history: [{
         transactionType: {
             type: String,
-            enum: ['creditCard', 'mobileCard', 'withDrawal', 'null'],
+            enum: ['creditCard', 'mobileCard', 'withdrawal', 'null'],
             default: 'null'
         },
         money: {
@@ -45,6 +50,11 @@ const accountSchema = new Schema({
             type: String,
             enum: ['done', 'waiting', 'canceled', 'null'],
         },
+        cardNumber: Number,
+        messages: {
+            type: String,
+            default: "null"
+        }
     }]
 })
 

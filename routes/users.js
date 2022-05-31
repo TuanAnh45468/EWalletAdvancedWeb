@@ -126,7 +126,7 @@ router.post('/addMoney', isLoggin, async (req, res, next) =>{
 
   const creditCard = await CreditCard.findOne({number: cardNumber}, async function(err, result){
     if(err){
-      req.flash('card', 'Invalid Card Number')
+      req.flash('card', 'Not Found Card Number')
       return res.redirect('/users/addMoney')
     } else {
       if(result.cvv !== cvv && result.expireDate !== expireDate){
@@ -138,7 +138,7 @@ router.post('/addMoney', isLoggin, async (req, res, next) =>{
         result.money = (result.money) - money;
         await result.save()
         await user.save()
-        await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now()}]}})
+        await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now(), cardNumber: cardNumber}]}})
         req.flash('successCard', 'Add money Successfully!')
         return res.redirect('/users/addMoney')
 
@@ -151,7 +151,7 @@ router.post('/addMoney', isLoggin, async (req, res, next) =>{
           result.money = (result.money) - money;
           await result.save()
           await user.save()
-          await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now()}]}})
+          await account.updateOne({$push: {history: [{transactionType: 'creditCard', money: money, state: 'done', transactionTime: Date.now(), cardNumber: cardNumber}]}})
           req.flash('successCard', 'Add money Successfully!!!')
           return res.redirect('/users/addMoney')
         }
@@ -162,31 +162,49 @@ router.post('/addMoney', isLoggin, async (req, res, next) =>{
       }
     }
   }).clone()
+})
 
-  // if(creditCard.filter(e => e.cvv == cvv && e.number == cardNumber && e.expireDate == expireDate).length <= 0){
-  //   req.flash('card', 'Invalid CVV or Card Number')
-  //   res.redirect('/users/addMoney')
-  // }
-  // else{
-  //   if(cvv == 411){
+router.get('/withdrawal', isLoggin, async(req, res, next) =>{
+  res.render('withdrawalMoney', {card: req.flash('card'), success: req.flash('successCard')})
+})
 
-  //   }
+router.post('/withdrawal', async(req, res, next) =>{
+  const {money, cardNumber, expireDate, cvv, messages} = req.body;
+  const user = await User.findOne({accounts: req.session.userId}).clone()
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
+  if(cardNumber != 111111){
+    req.flash('card', 'Just accept card number: 111111')
+    return res.redirect('/users/withdrawal')
+  }
 
-  //   if (cvv == 577) {
-  //     req.flash('card', 'Out of money')
-  //     res.redirect('/users/addMoney')
-  //   }
-  //   if (cvv == 443) {
-  //     if(money > 1000000){
-  //       req.flash('card', 'Cannot charge more than 1 million')
-  //       res.redirect('/users/addMoney')
-  //     } else {
+  const creditCard = await CreditCard.findOne({number: cardNumber}, async function(err, result){
+    if(err){
+      req.flash('card', 'Not found card number')
+      return res.redirect('/users/withdrawal')
+    } else {
+      if(result.number !== cardNumber && result.expireDate !== expireDate && result.cvv !== cvv){
+        req.flash('card', 'Please check cardnumber or expireDate, cvv again!')
+        return res.redirect('/users/withdrawal')
+      }
+      if(money % 50000 !== 0){
+        req.flash('card', 'phải là bội số của 50000!')
+        return res.redirect('/users/withdrawal')
+      } 
+      else if (money > 5000000){
 
-  //     }
-  //   }
-  //   req.flash('successCard', 'Add money successfully!')
-  //   res.redirect('/users/addMoney')
-  // }
+        await account.updateOne({$push: {history: [{transactionType: 'withdrawal', money: money, state: 'waiting', transactionTime: Date.now(), messages: messages, cardNumber: cardNumber}]}})
+        req.flash('card', 'Please Wait Admin Accept The Transaction')
+        return res.redirect('/users/withdrawal')
+      } else {
+        user.balance = user.balance - money - (money * 0.1);
+        await result.updateOne({$inc: {money: money}})
+        await account.updateOne({$push: {history: [{transactionType: 'withdrawal', money: money, state: 'done', transactionTime: Date.now(), messages: messages, cardNumber: cardNumber}]}})
+        await user.save();
+        req.flash('successCard', 'Withdrawl Money Successfully!')
+        return res.redirect('/users/withdrawal')
+      }
+    }
+  }).clone()
 })
 
 router.get('/updateProfile', isLoggin, async (req, res, next) =>{
