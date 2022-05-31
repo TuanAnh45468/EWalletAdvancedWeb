@@ -33,6 +33,18 @@ const isLoggin = (req, res, next) =>{
   next();
 }
 
+const isLocked = (req, res ,next) =>{
+  const account = Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, acc){
+    if(err){
+      console.log(err);
+    }
+    if(acc.state == "locked"){
+      req.flash('locked', 'Your account was locked')
+      res.redirect('users/login')
+    }
+  })
+}
+
 const isValidate = (req, res, next) =>{
   if(req.session.state == "notValidated"){
     
@@ -50,7 +62,7 @@ const validateChangePassFirst = (req, res, next) =>{
   }
 } 
 
-router.get('/', isLoggin, async function(req, res, next) {
+router.get('/', isLoggin, isLocked, async function(req, res, next) {
   const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
   //res.send(req.flash('loginSuccess'))
   res.render('mainLayoutUser', {account, messages: req.flash('loginSuccess')})
@@ -66,7 +78,8 @@ router.post('/register', upload.any('frontImage', 'backImage'), catchAsync(userC
 })
 
 router.get("/login", function(req, res, next) {
-  res.render('login');
+  
+  res.render('login' , {locked: req.flash('locked')});
 })
 
 router.post('/login', async function(req, res, next) {
