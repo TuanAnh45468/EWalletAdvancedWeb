@@ -33,22 +33,30 @@ const isLoggin = (req, res, next) =>{
   next();
 }
 
-const isLocked = (req, res ,next) =>{
-  const account = Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, acc){
+const isLocked = async (req, res ,next) =>{
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, acc){
     if(err){
       console.log(err);
     }
     if(acc.state == "locked"){
       req.flash('locked', 'Your account was locked')
-      res.redirect('users/login')
+      res.redirect('/users/login')
     }
-  })
+  }).clone()
+  next()
 }
 
-const isValidate = (req, res, next) =>{
-  if(req.session.state == "notValidated"){
-    
-  }
+const isValidate = async (req, res, next) =>{
+  const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, acc){
+    if(err){
+      console.log(err);
+    }
+    if(acc.state == "notValidated"){
+      req.flash('notValidated', 'Your account was not validated')
+      res.redirect('/users')
+    }
+  }).clone()
+  next()
 }
 
 const validateChangePassFirst = (req, res, next) =>{
@@ -65,7 +73,7 @@ const validateChangePassFirst = (req, res, next) =>{
 router.get('/', isLoggin, isLocked, async function(req, res, next) {
   const account = await Account.findById({_id: mongoose.Types.ObjectId(req.session.userId)}).clone()
   //res.send(req.flash('loginSuccess'))
-  res.render('mainLayoutUser', {account, messages: req.flash('loginSuccess')})
+  res.render('mainLayoutUser', {account, messages: req.flash('loginSuccess'), notValidated: req.flash('notValidated')})
 })
 
 router.get('/register', function(req, res, next){
@@ -130,11 +138,11 @@ router.post('/firstTime', validateChangePassFirst, catchAsync(async (req, res, n
   res.redirect('/users');
 }))
 
-router.get('/transferMoney', isLoggin, (req, res, next) =>{
+router.get('/transferMoney', isLoggin, isValidate, (req, res, next) =>{
   res.render('transferMoney');
 })
 
-router.get('/addMoney', isLoggin, (req, res, next) =>{
+router.get('/addMoney', isLoggin, isValidate, (req, res, next) =>{
   res.render('addMoney', {card: req.flash('card'), success: req.flash('successCard')});
 })
 
@@ -183,7 +191,7 @@ router.post('/addMoney', isLoggin, async (req, res, next) =>{
   }).clone()
 })
 
-router.get('/withdrawal', isLoggin, async(req, res, next) =>{
+router.get('/withdrawal', isLoggin, isValidate, async(req, res, next) =>{
   res.render('withdrawalMoney', {card: req.flash('card'), success: req.flash('successCard')})
 })
 
@@ -325,7 +333,7 @@ router.post('/email', catchAsync(userController.sendOTP), function (req, res, ne
   
 })
 
-router.get('/buyCard', isLoggin, async(req, res, next) => {
+router.get('/buyCard', isLoggin, isValidate,  async(req, res, next) => {
 
   res.render('buyMobileCard', {card: req.flash('card'), success: req.flash('successCard')})
 })

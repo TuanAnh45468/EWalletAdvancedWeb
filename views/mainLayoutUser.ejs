@@ -80,6 +80,10 @@
     <% if (messages.length > 0) { %>
     <div class="alert alert-success" role="alert"><%=messages%> </div>
     <% } %>
+
+    <% if (notValidated.length > 0) { %>
+      <div class="alert alert-danger" role="alert"><%=notValidated%> </div>
+      <% } %>
   </div>
 </body>
 
